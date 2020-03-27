@@ -1,6 +1,6 @@
-# flt
+# Flutter Quiz App
 
-A new Flutter project.
+It's my first app using the basics of dart and flutter framework, I'm doing a quiz app which you have to answer questions correctly in order to get points!
 
 ## Getting Started
 
