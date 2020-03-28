@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,47 +17,68 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var _questionIndex = 0;
-  void _answerQuestion() {
-    // Set stare force flutter to re-render (rebuild) the UI
-    if (_questionIndex == 2) _questionIndex = -1;
+  var _totalScore = 0;
+  final _questions = const [
+    {
+      'questionText': 'what\'s your favorite food?',
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Green', 'score': 3},
+      ]
+    },
+    {
+      'questionText': 'what kind of movies do you like the most?',
+      'answers': [
+        {'text': 'Comedy', 'score': 4},
+        {'text': 'Action', 'score': 7},
+        {'text': 'Horror', 'score': 10},
+        {'text': 'Romance', 'score': 1},
+      ]
+    },
+    {
+      'questionText': 'whats your favorite programing languae',
+      'answers': [
+        {'text': 'HTML', 'score': 15},
+        {'text': 'C#', 'score': 7},
+        {'text': 'PHP', 'score': 10},
+        {'text': 'dart', 'score': 1},
+      ]
+    },
+  ];
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
     setState(() {
       _questionIndex++;
     });
-    print('answer chosen');
+    print(_questionIndex);
+    if (_questionIndex < _questions.length)
+      print('we \'ve more questions');
+    else
+      print('no more questions');
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      {
-        'questionText': 'what\'s your favorite food?',
-        'answers': ['Black', 'Green', 'red', 'white']
-      },
-      {
-        'questionText': 'what kind of movies do you like the most?',
-        'answers': ['comedy', 'romance', 'action', 'horror']
-      },
-      {
-        'questionText': 'whats your favorite programing languae',
-        'answers': ['dart', 'c#', 'node.js', 'php']
-      },
-    ];
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text("My first app"),
         ),
         // list of widgets
-        body: Column(
-          children: [
-            Question(
-              questions[_questionIndex]['questionText']
-              ),
-            ...(questions[_questionIndex]['answers'] as List<String>).map((answer) {
-              return Answer(_answerQuestion, answer);
-            }).toList()
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questions: _questions,
+                questionIndex: _questionIndex)
+            : Result(_totalScore, _resetQuiz),
       ),
     );
   }
